@@ -50,7 +50,7 @@ void RoadNetwork::run() {
 
     city = this->getData("City");
     param.RoadNetworkRa = this->getRasterData("City",vRoadNetworkRa);
-    param.RoadNetworkRa->setSize(param.Width, param.Height, param.CellSize);
+    param.RoadNetworkRa->setSize(param.Width, param.Height, param.CellSize, param.CellSize,0,0);
     param.RoadNetworkRa->clear();
     param.roadDistanceToRiver =  param.roadDistanceToRiver_in / param.CellSize;
     param.roadBasisLength = param.roadBasisLength_in / param.CellSize;
@@ -62,14 +62,14 @@ void RoadNetwork::run() {
     StartPoint.x = 0;
     StartPoint.y = this->findPointNearRiver(StartPoint.x, param.roadDistanceToRiver,  param.topoStatus);
 
-    param.RoadNetworkRa->setValue(StartPoint.x, StartPoint.y, 1);
+    param.RoadNetworkRa->setCell(StartPoint.x, StartPoint.y, 1);
 
     Node EndPoint;
     EndPoint.x = param.Width -1;
     EndPoint.y = this->findPointNearRiver(EndPoint.x, param.roadDistanceToRiver,  param.topoStatus);
 
 
-    param.RoadNetworkRa->setValue(EndPoint.x, EndPoint.y, 1);
+    param.RoadNetworkRa->setCell(EndPoint.x, EndPoint.y, 1);
 
     std::vector<Node> vP ;
 
@@ -118,7 +118,7 @@ void RoadNetwork::run() {
         Node p(*it);
         counter1++;
         if ( counter1 > 8 && counter > 0 ) {
-            param.RoadNetworkRa->setValue(p.x, p.y, p.z);
+            param.RoadNetworkRa->setCell(p.x, p.y, p.z);
             counter1 = 0;
         }
         counter++;
@@ -177,7 +177,7 @@ std::vector<Node> RoadNetwork::findWayPoints(Node startPoint, Node endPoint, Ras
         for (long j = 0; j < param.Height; j++)
         {
             //check river
-            if (topoStatus->getValue(pos.x,j)== 10)
+            if (topoStatus->getCell(pos.x,j)== 10)
             {
                 if (j >= newbufferY)
                 {
@@ -187,7 +187,7 @@ std::vector<Node> RoadNetwork::findWayPoints(Node startPoint, Node endPoint, Ras
                     }
                     pos.y=j-currentDistanceToRiver;
                     side=-1; //lower y
-                    if (topoStatus->getValue(pos.x,pos.y) < 9)
+                    if (topoStatus->getCell(pos.x,pos.y) < 9)
                     {
                         break;
                     }
@@ -199,7 +199,7 @@ std::vector<Node> RoadNetwork::findWayPoints(Node startPoint, Node endPoint, Ras
         for (int j=param.Height-1;j>0;j--)
         {
             //check river
-            if (topoStatus->getValue(pos.x,j)== 10)
+            if (topoStatus->getCell(pos.x,j)== 10)
             {
                 if (j<=newbufferY)
                 {
@@ -209,7 +209,7 @@ std::vector<Node> RoadNetwork::findWayPoints(Node startPoint, Node endPoint, Ras
                     }
                     pos.y=j+currentDistanceToRiver;
                     side=1;
-                    if (topoStatus->getValue(pos.x,pos.y) < 9)
+                    if (topoStatus->getCell(pos.x,pos.y) < 9)
                     {
                         break;
                     }
@@ -234,7 +234,7 @@ long RoadNetwork::findPointNearRiver(long x, long offest, RasterData * rData) {
     //on river to x=0 side
     if (riverside == 0) {
         for (unsigned long j = 0; j < param.Height; j++) {
-            if (rData->getValue( x, j ) > 8) {
+            if (rData->getCell( x, j ) > 8) {
                 y = j - offest;
                 break;
             }
@@ -243,7 +243,7 @@ long RoadNetwork::findPointNearRiver(long x, long offest, RasterData * rData) {
     //on river to x=width side
     if (riverside == 1) {
         for (unsigned long j = param.Height - 1;j > 0; j--) {
-            if (rData->getValue(x, j) > 8) {
+            if (rData->getCell(x, j) > 8) {
                 y = j + offest;
                 break;
             }

@@ -88,9 +88,9 @@ void Topology::run() {
     this->param.topoGradient = this->getRasterData("Topology", vtopoGradient);
     this->param.topoStatus= this->getRasterData("Topology", vtopoStatus);
 
-    this->param.topoElevation->setSize(param.width, param.height, param.cellSize);
-    this->param.topoGradient->setSize(param.width, param.height, param.cellSize);
-    this->param.topoStatus->setSize(param.width, param.height, param.cellSize);
+    this->param.topoElevation->setSize(param.width, param.height, param.cellSize, param.cellSize, 0,0);
+    this->param.topoGradient->setSize(param.width, param.height, param.cellSize, param.cellSize, 0,0);
+    this->param.topoStatus->setSize(param.width, param.height, param.cellSize, param.cellSize, 0,0);
 
     std::cout << "Create Topology" << std::endl;
 
@@ -153,9 +153,9 @@ void Topology::run() {
 
     for ( unsigned long  i = 0; i < param.width; i++ ) {
         for ( unsigned long  j = 0; j < param.height; j++ ) {
-            param.topoStatus->setValue(i,j, layer_[VIBe::topoStatus]->getVal(i,j));
-            param.topoElevation->setValue(i,j, layer_[VIBe::topoElevation]->getVal(i,j));
-            param.topoGradient->setValue(i,j, layer_[VIBe::topoGradient]->getVal(i,j));
+            param.topoStatus->setCell(i,j, layer_[VIBe::topoStatus]->getVal(i,j));
+            param.topoElevation->setCell(i,j, layer_[VIBe::topoElevation]->getVal(i,j));
+            param.topoGradient->setCell(i,j, layer_[VIBe::topoGradient]->getVal(i,j));
         }
     }
 

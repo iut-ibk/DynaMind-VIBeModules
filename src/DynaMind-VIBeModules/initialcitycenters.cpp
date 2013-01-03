@@ -64,7 +64,7 @@ void InitialCityCenters::run() {
         //on river to x=0 side
         if (riverside == 0) {
             for (unsigned long j = 0; j < param.Height; j++) {
-                if (topoStatus->getValue( pos.x, j ) == 10) {
+                if (topoStatus->getCell( pos.x, j ) == 10) {
                     radius = floor(MenanderWidthinCells * (20+rand()%(80))*0.01 * (-1));
                     pos.y = j + radius;
                     break;
@@ -74,7 +74,7 @@ void InitialCityCenters::run() {
         //on river to x=width side
         if (riverside == 1) {
             for (unsigned long j = param.Height - 1;j > 0; j--) {
-                if (topoStatus->getValue(pos.x, j) == 10) {
+                if (topoStatus->getCell(pos.x, j) == 10) {
                     radius = floor(MenanderWidthinCells * (20+rand()%(80))*0.01 );
                     pos.y = j + radius;
                     break;
